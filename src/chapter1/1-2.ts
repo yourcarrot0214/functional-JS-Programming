@@ -1,4 +1,10 @@
-const users = [
+type User = {
+  id: number;
+  name: string;
+  age: number;
+};
+
+const users: User[] = [
   { id: 1, name: "AA", age: 32 },
   { id: 2, name: "BB", age: 25 },
   { id: 3, name: "CC", age: 32 },
@@ -8,19 +14,17 @@ const users = [
   { id: 7, name: "GG", age: 24 }
 ];
 
-const userAge_under_30 = users.filter((user) => user.age > 19 && user.age < 30);
-
-function filter(list, func) {
+export function filter<T>(list: T[], func: Function): T[] {
   var newList = [];
   for (let i = 0; i < list.length; i++) {
-    if (func(list[i])) newList.push(list[i].name);
+    if (func(list[i])) newList.push(list[i]);
   }
   return newList;
 }
 
-const twenties = filter(users, (user) => user.age < 30);
+const twenties = filter<User>(users, (user: User) => user.age < 30);
 
-// console.log(twenties);
+console.log(twenties);
 
 /*
   1. filter 함수는 항상 동일하게 동작하는 함수다.
@@ -38,4 +42,62 @@ const twenties = filter(users, (user) => user.age < 30);
   함수형 프로그래밍에서는 '항상 동일하게 동작하는 함수'를 만들고 보조 함수를 조합하는 식으로 로직을 완성한다.
   내부에서 관리하고 있는 상태를 따로 두지 않고 넘겨진 인자에만 의존한다.
   동일한 인자가 들어오면 동일한 값을 리턴하도록 한다.
+*/
+
+// 1.2.4 map 함수
+export function map<T>(list: Array<T>, iteratee: Function) {
+  let newList = [];
+  for (let i = 0; i < list.length; i++) {
+    newList.push(iteratee(list[i]));
+  }
+  return newList;
+}
+
+console.log(
+  "twenties id ",
+  map<User>(twenties, (user: User) => user.id)
+);
+console.log(
+  "twenties name ",
+  map<User>(twenties, (user: User) => user.name)
+);
+
+/*
+  인자로 받은 배열에서 특정 작업을 거친 뒤 새로운 배열을 리턴하는 map 함수.
+  새로운 배열에 포함되는 내용은 iteratee 함수에 위임했다.
+  * 조건을 인자로 넣지 않고 함수를 인자로 넣음으로서 함수의 다형성이 높아짐.
+  첫 번째 파라미터인 list는 배열로서 filter 함수의 리턴 결과로 바로 사용할 수도 있다.
+*/
+
+console.log(
+  "함수의 결과를 바로 사용하는 map 함수",
+  map(
+    filter(users, (user: User) => user.age > 30),
+    (user: User) => user.name
+  )
+);
+/*
+  filter 함수로 30대 유저 리스트를 만들고 이 값을 바로 활용했다.
+  map 함수는 filter 함수의 결과 중 그들의 이름만을 뽑아 새로운 배열을 리턴한다.
+*/
+
+// 1.2.6 함수를 값으로 다룬 예제의 실용성
+export function bindValue(key: string) {
+  return function (object: object): string | number {
+    return object[key];
+  };
+}
+
+console.log(
+  "bindValue로 map 함수 iteratee 만들기",
+  map(
+    filter(users, (user: User) => user.age > 30),
+    bindValue("name")
+  )
+);
+/*
+  bindValue 함수는 인자로 받는 key 값을 기억하고 있는 클로저를 리턴한다.
+  클로저는 map 함수의 iteratee 함수를 대체하여 코드가 간결해지고 가독성이 좋아졌다.
+
+  * 함수를 리턴하는 함수나 아주 작은 단위의 함수들이 매우 실용적으로 사용되는 사례들을 배운다.
 */
