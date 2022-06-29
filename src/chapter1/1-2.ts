@@ -1,10 +1,10 @@
-type User = {
+export type User = {
   id: number;
   name: string;
   age: number;
 };
 
-const users: User[] = [
+export const users: User[] = [
   { id: 1, name: "AA", age: 32 },
   { id: 2, name: "BB", age: 25 },
   { id: 3, name: "CC", age: 32 },
@@ -24,7 +24,7 @@ export function filter<T>(list: T[], func: Function): T[] {
 
 const twenties = filter<User>(users, (user: User) => user.age < 30);
 
-console.log(twenties);
+// console.log(twenties);
 
 /*
   1. filter 함수는 항상 동일하게 동작하는 함수다.
@@ -69,13 +69,13 @@ console.log(
   첫 번째 파라미터인 list는 배열로서 filter 함수의 리턴 결과로 바로 사용할 수도 있다.
 */
 
-console.log(
-  "함수의 결과를 바로 사용하는 map 함수",
-  map(
-    filter(users, (user: User) => user.age > 30),
-    (user: User) => user.name
-  )
-);
+// console.log(
+//   "함수의 결과를 바로 사용하는 map 함수",
+//   map(
+//     filter(users, (user: User) => user.age > 30),
+//     (user: User) => user.name
+//   )
+// );
 /*
   filter 함수로 30대 유저 리스트를 만들고 이 값을 바로 활용했다.
   map 함수는 filter 함수의 결과 중 그들의 이름만을 뽑아 새로운 배열을 리턴한다.
@@ -88,13 +88,13 @@ export function bindValue(key: string) {
   };
 }
 
-console.log(
-  "bindValue로 map 함수 iteratee 만들기",
-  map(
-    filter(users, (user: User) => user.age > 30),
-    bindValue("name")
-  )
-);
+// console.log(
+//   "bindValue로 map 함수 iteratee 만들기",
+//   map(
+//     filter(users, (user: User) => user.age > 30),
+//     bindValue("name")
+//   )
+// );
 /*
   bindValue 함수는 인자로 받는 key 값을 기억하고 있는 클로저를 리턴한다.
   클로저는 map 함수의 iteratee 함수를 대체하여 코드가 간결해지고 가독성이 좋아졌다.
