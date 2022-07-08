@@ -131,7 +131,7 @@ export function bindMatch(object2, value) {
 
 var _;
 
-export function usMap(list, iteratee) {
+export function us(list, iteratee) {
   let newList = [];
   for (let i = 0; i < list.length; i++) {
     newList.push(iteratee(list[i], i, list));
